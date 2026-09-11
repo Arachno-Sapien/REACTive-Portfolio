@@ -115,5 +115,10 @@ The project builds to static files in the `dist/` folder and can be deployed to 
 ## Author
 
 **Syed Junaid Khalander**
+<<<<<<< HEAD
 - LinkedIn: [linkedin.com/in/syed-junaid-k](https://www.linkedin.com/in/syed-junaid-k)
 - GitHub: [github.com/Arachno-Sapien](https://github.com/Arachno-Sapien)
+=======
+- LinkedIn: [linkedin.com/in/syed-junaid-khalander](https://www.linkedin.com/in/syed-junaid-k)
+- GitHub: [github.com/Junaid-028](https://github.com/Arachno-Sapien)
+>>>>>>> 224099278cf2e355498c37538e1ab973bfc42fab
