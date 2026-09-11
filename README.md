@@ -2,6 +2,8 @@
 
 A modern, high-performance developer portfolio built with **React 19**, **TypeScript**, **Vite**, **Tailwind CSS v4**, and animated interaction components powered by **Motion**, **GSAP**, and **React Bits**.
 
+**Live Demo**: [syedjunaid-portfolio.pages.dev](https://syedjunaid-portfolio.pages.dev/)
+
 ---
 
 ## Features
@@ -93,20 +95,31 @@ A modern, high-performance developer portfolio built with **React 19**, **TypeSc
 
 ## Deployment
 
-The project builds to static files in the `dist/` folder and can be deployed to any static hosting provider:
+The project is deployed and continuously delivered via **Cloudflare Pages**:
 
-### Vercel
+### Cloudflare Pages (Active)
+- **Live URL**: [https://syedjunaid-portfolio.pages.dev/](https://syedjunaid-portfolio.pages.dev/)
+- **Framework Preset**: Vite / React
+- **Build Command**: `npm run build`
+- **Output Directory**: `dist`
+- **Continuous Deployment**: Connected to the `main` branch of [Arachno-Sapien/REACTive-Portfolio](https://github.com/Arachno-Sapien/REACTive-Portfolio) for automatic builds on push.
+
+### Alternative Static Hosts
+
+The production bundle in `dist/` can also be hosted on:
+
+#### Vercel
 1. Import repository on [Vercel](https://vercel.com).
 2. Framework Preset: **Vite**
 3. Build Command: `npm run build`
 4. Output Directory: `dist`
 
-### Netlify
+#### Netlify
 1. Connect repository on [Netlify](https://www.netlify.com).
 2. Build Command: `npm run build`
 3. Publish Directory: `dist`
 
-### GitHub Pages
+#### GitHub Pages
 1. Build the production bundle: `npm run build`
 2. Deploy the generated `dist/` folder using GitHub Pages or the `gh-pages` npm package.
 
