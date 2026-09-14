@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useCallback } from 'react';
+import { useDeviceCapability } from '@/hooks/useDeviceCapability';
 
 interface ClickSparkProps {
   sparkColor?: string;
@@ -28,42 +29,11 @@ const ClickSpark: React.FC<ClickSparkProps> = ({
   extraScale = 1.0,
   children
 }) => {
+  const tier = useDeviceCapability();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const sparksRef = useRef<Spark[]>([]);
-  const startTimeRef = useRef<number | null>(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const parent = canvas.parentElement;
-    if (!parent) return;
-
-    let resizeTimeout: ReturnType<typeof setTimeout>;
-
-    const resizeCanvas = () => {
-      const { width, height } = parent.getBoundingClientRect();
-      if (canvas.width !== width || canvas.height !== height) {
-        canvas.width = width;
-        canvas.height = height;
-      }
-    };
-
-    const handleResize = () => {
-      clearTimeout(resizeTimeout);
-      resizeTimeout = setTimeout(resizeCanvas, 100);
-    };
-
-    const ro = new ResizeObserver(handleResize);
-    ro.observe(parent);
-
-    resizeCanvas();
-
-    return () => {
-      ro.disconnect();
-      clearTimeout(resizeTimeout);
-    };
-  }, []);
+  // Track the running RAF id — null means the loop is not running
+  const rafIdRef = useRef<number | null>(null);
 
   const easeFunc = useCallback(
     (t: number) => {
@@ -81,78 +51,154 @@ const ClickSpark: React.FC<ClickSparkProps> = ({
     [easing]
   );
 
+  // On low-end devices skip the canvas entirely — render children only.
+  // This is the single biggest win: no canvas, no RAF, no OOM.
+  if (tier === 'low') {
+    return <>{children}</>;
+  }
+
+  return <ClickSparkCanvas
+    sparkColor={sparkColor}
+    sparkSize={sparkSize}
+    sparkRadius={sparkRadius}
+    sparkCount={sparkCount}
+    duration={duration}
+    easeFunc={easeFunc}
+    extraScale={extraScale}
+    sparksRef={sparksRef}
+    canvasRef={canvasRef}
+    rafIdRef={rafIdRef}
+  >
+    {children}
+  </ClickSparkCanvas>;
+};
+
+// ── Inner component rendered only on high-end devices ──────────────────────────
+
+interface CanvasProps extends Omit<ClickSparkProps, 'easing'> {
+  easeFunc: (t: number) => number;
+  sparksRef: React.RefObject<Spark[]>;
+  canvasRef: React.RefObject<HTMLCanvasElement | null>;
+  rafIdRef: React.MutableRefObject<number | null>;
+}
+
+const ClickSparkCanvas: React.FC<CanvasProps> = ({
+  sparkColor = '#fff',
+  sparkSize = 10,
+  sparkRadius = 15,
+  sparkCount = 8,
+  duration = 400,
+  extraScale = 1.0,
+  easeFunc,
+  sparksRef,
+  canvasRef,
+  rafIdRef,
+  children
+}) => {
+  // Keep canvas fixed at viewport size — never the full page height
   useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const sync = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    sync();
+
+    let t: ReturnType<typeof setTimeout>;
+    const onResize = () => { clearTimeout(t); t = setTimeout(sync, 100); };
+    window.addEventListener('resize', onResize, { passive: true });
+    return () => {
+      window.removeEventListener('resize', onResize);
+      clearTimeout(t);
+    };
+  }, [canvasRef]);
+
+  // Draw loop — starts only when there are sparks, stops when all expire
+  const draw = useCallback((timestamp: number) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    let animationId: number;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    const draw = (timestamp: number) => {
-      if (!startTimeRef.current) {
-        startTimeRef.current = timestamp;
-      }
-      ctx?.clearRect(0, 0, canvas.width, canvas.height);
+    sparksRef.current = sparksRef.current.filter((spark: Spark) => {
+      const elapsed = timestamp - spark.startTime;
+      if (elapsed >= duration) return false;
 
-      sparksRef.current = sparksRef.current.filter((spark: Spark) => {
-        const elapsed = timestamp - spark.startTime;
-        if (elapsed >= duration) {
-          return false;
-        }
+      const progress = elapsed / duration;
+      const eased = easeFunc(progress);
+      const distance = eased * (sparkRadius ?? 15) * extraScale;
+      const lineLength = (sparkSize ?? 10) * (1 - eased);
 
-        const progress = elapsed / duration;
-        const eased = easeFunc(progress);
+      const x1 = spark.x + distance * Math.cos(spark.angle);
+      const y1 = spark.y + distance * Math.sin(spark.angle);
+      const x2 = spark.x + (distance + lineLength) * Math.cos(spark.angle);
+      const y2 = spark.y + (distance + lineLength) * Math.sin(spark.angle);
 
-        const distance = eased * sparkRadius * extraScale;
-        const lineLength = sparkSize * (1 - eased);
+      ctx.strokeStyle = sparkColor;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
 
-        const x1 = spark.x + distance * Math.cos(spark.angle);
-        const y1 = spark.y + distance * Math.sin(spark.angle);
-        const x2 = spark.x + (distance + lineLength) * Math.cos(spark.angle);
-        const y2 = spark.y + (distance + lineLength) * Math.sin(spark.angle);
+      return true;
+    });
 
-        ctx.strokeStyle = sparkColor;
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.moveTo(x1, y1);
-        ctx.lineTo(x2, y2);
-        ctx.stroke();
+    if (sparksRef.current.length > 0) {
+      rafIdRef.current = requestAnimationFrame(draw);
+    } else {
+      // No sparks left — stop the loop entirely until next click
+      rafIdRef.current = null;
+    }
+  }, [canvasRef, sparksRef, rafIdRef, duration, easeFunc, sparkRadius, extraScale, sparkSize, sparkColor]);
 
-        return true;
-      });
-
-      animationId = requestAnimationFrame(draw);
-    };
-
-    animationId = requestAnimationFrame(draw);
-
+  // Cleanup on unmount
+  useEffect(() => {
     return () => {
-      cancelAnimationFrame(animationId);
+      if (rafIdRef.current !== null) {
+        cancelAnimationFrame(rafIdRef.current);
+        rafIdRef.current = null;
+      }
     };
-  }, [sparkColor, sparkSize, sparkRadius, sparkCount, duration, easeFunc, extraScale]);
+  }, [rafIdRef]);
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement>): void => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const rect = canvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-
+    // Coordinates relative to the fixed viewport canvas
+    const x = e.clientX;
+    const y = e.clientY;
     const now = performance.now();
-    const newSparks: Spark[] = Array.from({ length: sparkCount }, (_, i) => ({
+
+    const newSparks: Spark[] = Array.from({ length: sparkCount ?? 8 }, (_, i) => ({
       x,
       y,
-      angle: (2 * Math.PI * i) / sparkCount,
+      angle: (2 * Math.PI * i) / (sparkCount ?? 8),
       startTime: now
     }));
 
     sparksRef.current.push(...newSparks);
+
+    // Start the loop only if it isn't already running
+    if (rafIdRef.current === null) {
+      rafIdRef.current = requestAnimationFrame(draw);
+    }
   };
 
   return (
-    <div className="relative w-full h-full" onClick={handleClick}>
-      <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none" />
+    <div style={{ position: 'relative', width: '100%', height: '100%' }} onClick={handleClick}>
+      {/* Fixed canvas — always viewport-sized, never page-height */}
+      <canvas
+        ref={canvasRef}
+        style={{
+          position: 'fixed',
+          inset: 0,
+          pointerEvents: 'none',
+          zIndex: 9999,
+        }}
+      />
       {children}
     </div>
   );

@@ -15,8 +15,8 @@ export const identity = {
   linkedin: 'https://www.linkedin.com/in/syed-junaid-k/',
   github: 'https://github.com/Arachno-Sapien',
   resume: '/assets/Resume.pdf',
-  avatar: '/assets/Profile.png',
-  logo: '/assets/image.png',
+  avatar: '/assets/Profile.webp',
+  logo: '/assets/image.webp',
 }
 
 export const navItems = [
@@ -117,90 +117,90 @@ export const hackathons = [
 export const certificates = [
   {
     title: 'Artificial Intelligence with Machine Learning',
-    image: '/assets/certificates/images/artificial-intelligence-with-machine-learning.jpg',
+    image: '/assets/certificates/images/artificial-intelligence-with-machine-learning.webp',
   },
   {
     title: 'Mastering Generative AI',
-    image: '/assets/certificates/images/mastering-generative-ai.jpg',
+    image: '/assets/certificates/images/mastering-generative-ai.webp',
   },
-  { title: 'AI & ML Hackathon', image: '/assets/certificates/images/ai-ml-hackathon.jpg' },
+  { title: 'AI & ML Hackathon', image: '/assets/certificates/images/ai-ml-hackathon.webp' },
   {
     title: 'Generative AI Hackathon',
-    image: '/assets/certificates/images/generative-ai-hackathon.jpg',
+    image: '/assets/certificates/images/generative-ai-hackathon.webp',
   },
-  { title: 'Internet of Things', image: '/assets/certificates/images/internet-of-things.jpg' },
+  { title: 'Internet of Things', image: '/assets/certificates/images/internet-of-things.webp' },
   {
     title: 'IoT: Communication Technologies',
-    image: '/assets/certificates/images/iot-communication-technologies.jpg',
+    image: '/assets/certificates/images/iot-communication-technologies.webp',
   },
   {
     title: 'Internet of Things (Part 1)',
-    image: '/assets/certificates/images/internet-of-things-part-1.jpg',
+    image: '/assets/certificates/images/internet-of-things-part-1.webp',
   },
   {
     title: 'Internet of Things (Part 2)',
-    image: '/assets/certificates/images/internet-of-things-part-2.jpg',
+    image: '/assets/certificates/images/internet-of-things-part-2.webp',
   },
-  { title: 'Python Programming', image: '/assets/certificates/images/python-programming.jpg' },
-  { title: 'C Programming', image: '/assets/certificates/images/c-programming.jpg' },
+  { title: 'Python Programming', image: '/assets/certificates/images/python-programming.webp' },
+  { title: 'C Programming', image: '/assets/certificates/images/c-programming.webp' },
   {
     title: 'C Programming (8-Hour)',
-    image: '/assets/certificates/images/c-programming-8-hour.jpg',
+    image: '/assets/certificates/images/c-programming-8-hour.webp',
   },
   {
     title: 'C Programming (23-Hour Comprehensive)',
-    image: '/assets/certificates/images/c-programming-23-hour-comprehensive.jpg',
+    image: '/assets/certificates/images/c-programming-23-hour-comprehensive.webp',
   },
-  { title: 'Java Programming', image: '/assets/certificates/images/java-programming.jpg' },
-  { title: 'HTML', image: '/assets/certificates/images/html.jpg' },
+  { title: 'Java Programming', image: '/assets/certificates/images/java-programming.webp' },
+  { title: 'HTML', image: '/assets/certificates/images/html.webp' },
   {
     title: 'Database Management Systems & SQL',
-    image: '/assets/certificates/images/database-management-systems-sql.jpg',
+    image: '/assets/certificates/images/database-management-systems-sql.webp',
   },
   {
     title: 'Data Structures & Algorithms',
-    image: '/assets/certificates/images/data-structures-algorithms.jpg',
+    image: '/assets/certificates/images/data-structures-algorithms.webp',
   },
   {
     title: 'Data Structures & Algorithms Using Python',
-    image: '/assets/certificates/images/data-structures-algorithms-using-python.jpg',
+    image: '/assets/certificates/images/data-structures-algorithms-using-python.webp',
   },
   {
     title: 'Data Networking Fundamentals',
-    image: '/assets/certificates/images/data-networking-fundamentals.jpg',
+    image: '/assets/certificates/images/data-networking-fundamentals.webp',
   },
-  { title: 'UNIX & Linux OS', image: '/assets/certificates/images/unix-linux-os.jpg' },
+  { title: 'UNIX & Linux OS', image: '/assets/certificates/images/unix-linux-os.webp' },
   {
     title: 'Linear Algebra & Probability',
-    image: '/assets/certificates/images/linear-algebra-probability.jpg',
+    image: '/assets/certificates/images/linear-algebra-probability.webp',
   },
-  { title: 'MATLAB (Beginner)', image: '/assets/certificates/images/matlab-beginner.jpg' },
-  { title: 'MATLAB (Intermediate)', image: '/assets/certificates/images/matlab-intermediate.jpg' },
+  { title: 'MATLAB (Beginner)', image: '/assets/certificates/images/matlab-beginner.webp' },
+  { title: 'MATLAB (Intermediate)', image: '/assets/certificates/images/matlab-intermediate.webp' },
   {
     title: 'Organic Solar Cells: Theory & Practice',
-    image: '/assets/certificates/images/organic-solar-cells-theory-practice.jpg',
+    image: '/assets/certificates/images/organic-solar-cells-theory-practice.webp',
   },
   {
     title: 'Full-Stack Web Development with AI',
-    image: '/assets/certificates/images/full-stack-web-development-with-ai.jpg',
+    image: '/assets/certificates/images/full-stack-web-development-with-ai.webp',
   },
   {
     title: 'Full-Stack Development with AI (NSDC)',
-    image: '/assets/certificates/images/full-stack-development-with-ai-nsdc.jpg',
+    image: '/assets/certificates/images/full-stack-development-with-ai-nsdc.webp',
   },
   {
     title: 'Shiksha Vertex Training',
-    image: '/assets/certificates/images/shiksha-vertex-training.jpg',
+    image: '/assets/certificates/images/shiksha-vertex-training.webp',
   },
   {
     title: 'Communication Skills',
-    image: '/assets/certificates/images/communication-skills.jpg',
+    image: '/assets/certificates/images/communication-skills.webp',
   },
   {
     title: 'Personal Effectiveness',
-    image: '/assets/certificates/images/personal-effectiveness.jpg',
+    image: '/assets/certificates/images/personal-effectiveness.webp',
   },
-  { title: 'Vulcan Racing', image: '/assets/certificates/images/vulcan-racing.jpg' },
+  { title: 'Vulcan Racing', image: '/assets/certificates/images/vulcan-racing.webp' },
 ]
 
 export const projects = [
@@ -210,7 +210,7 @@ export const projects = [
       'Algae-based air purification system using Chlorella vulgaris and design-thinking workflows for urban CO₂ reduction.',
     tags: ['Design Thinking', 'Prototyping', 'Sustainability'],
     url: 'https://github.com/Arachno-Sapien/ELYSIUM',
-    image: '/assets/project-1.png',
+    image: '/assets/project-1.webp',
   },
   {
     name: 'Real-time Video Transmission',

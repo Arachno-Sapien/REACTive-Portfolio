@@ -450,6 +450,7 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
                 src={avatarUrl}
                 alt={`${name || 'User'} avatar`}
                 loading="lazy"
+                decoding="async"
                 style={{
                   transformOrigin: '50% 100%',
                   transform:
@@ -488,6 +489,7 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
                         src={miniAvatarUrl || avatarUrl}
                         alt={`${name || 'User'} mini avatar`}
                         loading="lazy"
+                        decoding="async"
                         style={{ display: 'block', gridArea: 'auto', borderRadius: '50%', pointerEvents: 'auto' }}
                         onError={e => {
                           const t = e.target as HTMLImageElement;

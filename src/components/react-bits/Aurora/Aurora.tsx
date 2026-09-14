@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { Renderer, Program, Mesh, Color, Triangle } from 'ogl';
+import { useDeviceCapability } from '@/hooks/useDeviceCapability';
 
 const VERT = `#version 300 es
 in vec2 position;
@@ -126,23 +127,66 @@ interface AuroraProps {
   lightMode?: boolean;
 }
 
+// CSS-only gradient fallback used on low-end devices or when WebGL fails
+function AuroraFallback({ colorStops = ['#1faa72', '#3dffa8', '#7ec8ff'] }: AuroraProps) {
+  return (
+    <div
+      className="w-full h-full"
+      style={{
+        background: `linear-gradient(135deg, ${colorStops[0] ?? '#1faa72'} 0%, ${colorStops[1] ?? '#3dffa8'} 50%, ${colorStops[2] ?? '#7ec8ff'} 100%)`,
+        opacity: 0.6,
+      }}
+    />
+  );
+}
+
 export default function Aurora(props: AuroraProps) {
+  const { colorStops = ['#5227FF', '#7cff67', '#5227FF'], amplitude = 1.0, blend = 0.5, lightMode = false } = props;
+  const tier = useDeviceCapability();
+
+  // On low-end devices skip WebGL entirely — no shader, no RAF, no GPU memory
+  if (tier === 'low') {
+    return <AuroraFallback colorStops={colorStops} />;
+  }
+
+  return <AuroraWebGL {...props} amplitude={amplitude} blend={blend} lightMode={lightMode} colorStops={colorStops} />;
+}
+
+// ── WebGL implementation, only mounted on capable devices ──────────────────────
+
+function AuroraWebGL(props: AuroraProps) {
   const { colorStops = ['#5227FF', '#7cff67', '#5227FF'], amplitude = 1.0, blend = 0.5, lightMode = false } = props;
   const propsRef = useRef<AuroraProps>(props);
   propsRef.current = props;
 
   const ctnDom = useRef<HTMLDivElement>(null);
+  // Separate ref to track if the component is visible
+  const isVisibleRef = useRef<boolean>(true);
+  const animateIdRef = useRef<number>(0);
+  const webglFailedRef = useRef<boolean>(false);
+  const fallbackShownRef = useRef<boolean>(false);
 
   useEffect(() => {
     const ctn = ctnDom.current;
     if (!ctn) return;
 
-    const renderer = new Renderer({
-      alpha: true,
-      premultipliedAlpha: true,
-      antialias: true
-    });
-    const gl = renderer.gl;
+    let renderer: Renderer;
+    let gl: Renderer['gl'];
+
+    // Gracefully handle WebGL init failures (old GPUs, incognito limits, etc.)
+    try {
+      renderer = new Renderer({
+        alpha: true,
+        premultipliedAlpha: true,
+        antialias: true,
+      });
+      gl = renderer.gl;
+    } catch {
+      webglFailedRef.current = true;
+      fallbackShownRef.current = true;
+      return;
+    }
+
     gl.clearColor(0, 0, 0, 0);
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
@@ -159,7 +203,7 @@ export default function Aurora(props: AuroraProps) {
         program.uniforms.uResolution.value = [width, height];
       }
     }
-    window.addEventListener('resize', resize);
+    window.addEventListener('resize', resize, { passive: true });
 
     const geometry = new Triangle(gl);
     if (geometry.attributes.uv) {
@@ -171,52 +215,68 @@ export default function Aurora(props: AuroraProps) {
       return [c.r, c.g, c.b];
     });
 
-    program = new Program(gl, {
-      vertex: VERT,
-      fragment: FRAG,
-      uniforms: {
-        uTime: { value: 0 },
-        uAmplitude: { value: amplitude },
-        uColorStops: { value: colorStopsArray },
-        uResolution: { value: [ctn.offsetWidth, ctn.offsetHeight] },
-        uBlend: { value: blend },
-        uLightMode: { value: lightMode ? 1 : 0 }
-      }
-    });
+    try {
+      program = new Program(gl, {
+        vertex: VERT,
+        fragment: FRAG,
+        uniforms: {
+          uTime: { value: 0 },
+          uAmplitude: { value: amplitude },
+          uColorStops: { value: colorStopsArray },
+          uResolution: { value: [ctn.offsetWidth, ctn.offsetHeight] },
+          uBlend: { value: blend },
+          uLightMode: { value: lightMode ? 1 : 0 }
+        }
+      });
+    } catch {
+      webglFailedRef.current = true;
+      gl.getExtension('WEBGL_lose_context')?.loseContext();
+      return;
+    }
 
     const mesh = new Mesh(gl, { geometry, program });
     ctn.appendChild(gl.canvas);
 
-    let animateId = 0;
     const update = (t: number) => {
-      animateId = requestAnimationFrame(update);
-      const { time = t * 0.01, speed = 1.0 } = propsRef.current;
-      if (program) {
-        program.uniforms.uTime.value = time * speed * 0.1;
-        program.uniforms.uAmplitude.value = propsRef.current.amplitude ?? 1.0;
-        program.uniforms.uBlend.value = propsRef.current.blend ?? blend;
-        program.uniforms.uLightMode.value = (propsRef.current.lightMode ?? lightMode) ? 1 : 0;
-        const stops = propsRef.current.colorStops ?? colorStops;
-        program.uniforms.uColorStops.value = stops.map((hex: string) => {
-          const c = new Color(hex);
-          return [c.r, c.g, c.b];
-        });
-        renderer.render({ scene: mesh });
+      // Only render when visible — saves GPU cycles for the entire rest of the session
+      if (isVisibleRef.current) {
+        const { time = t * 0.01, speed = 1.0 } = propsRef.current;
+        if (program) {
+          program.uniforms.uTime.value = time * speed * 0.1;
+          program.uniforms.uAmplitude.value = propsRef.current.amplitude ?? 1.0;
+          program.uniforms.uBlend.value = propsRef.current.blend ?? blend;
+          program.uniforms.uLightMode.value = (propsRef.current.lightMode ?? lightMode) ? 1 : 0;
+          const stops = propsRef.current.colorStops ?? colorStops;
+          program.uniforms.uColorStops.value = stops.map((hex: string) => {
+            const c = new Color(hex);
+            return [c.r, c.g, c.b];
+          });
+          renderer.render({ scene: mesh });
+        }
       }
+      animateIdRef.current = requestAnimationFrame(update);
     };
-    animateId = requestAnimationFrame(update);
+    animateIdRef.current = requestAnimationFrame(update);
+
+    // IntersectionObserver: pause the RAF loop when Aurora is off-screen
+    const io = new IntersectionObserver(
+      ([entry]) => { isVisibleRef.current = entry.isIntersecting; },
+      { threshold: 0 },
+    );
+    io.observe(ctn);
 
     resize();
 
     return () => {
-      cancelAnimationFrame(animateId);
+      cancelAnimationFrame(animateIdRef.current);
       window.removeEventListener('resize', resize);
+      io.disconnect();
       if (ctn && gl.canvas.parentNode === ctn) {
         ctn.removeChild(gl.canvas);
       }
       gl.getExtension('WEBGL_lose_context')?.loseContext();
     };
-  }, [amplitude]);
+  }, [amplitude]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return <div ref={ctnDom} className="w-full h-full" />;
 }

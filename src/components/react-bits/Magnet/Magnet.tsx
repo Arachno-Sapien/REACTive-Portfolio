@@ -27,7 +27,7 @@ const Magnet: React.FC<MagnetProps> = ({
   const magnetRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (disabled) {
+    if (disabled || (typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches)) {
       setPosition({ x: 0, y: 0 });
       return;
     }

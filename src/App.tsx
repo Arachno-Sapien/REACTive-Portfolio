@@ -54,6 +54,30 @@ export default function App() {
   ])
 
   useEffect(() => {
+    const isTouch = typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches
+    if (isTouch) {
+      const handleHashClick = (e: MouseEvent) => {
+        const target = (e.target as HTMLElement)?.closest('a')
+        const href = target?.getAttribute('href')
+        if (href?.startsWith('#') && href.length > 1 && /^#[a-zA-Z][\w-]*$/.test(href)) {
+          try {
+            const el = document.querySelector(href)
+            if (el) {
+              e.preventDefault()
+              el.scrollIntoView({ behavior: 'smooth' })
+            }
+          } catch {
+            // Ignore selector syntax error
+          }
+        }
+      }
+
+      document.addEventListener('click', handleHashClick)
+      return () => {
+        document.removeEventListener('click', handleHashClick)
+      }
+    }
+
     const lenis = new Lenis({
       duration: 1.1,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -135,7 +159,7 @@ export default function App() {
         <footer className="border-t border-line/60 bg-panel/30 px-6 py-10">
           <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-6 sm:flex-row">
             <div className="flex items-center gap-3">
-              <img src={identity.logo} alt={identity.brand} className="h-8 w-8 rounded-full object-cover" />
+              <img src={identity.logo} alt={identity.brand} loading="lazy" decoding="async" className="h-8 w-8 rounded-full object-cover" />
               <div>
                 <p className="font-display font-semibold text-paper">{identity.name}</p>
                 <p className="text-xs text-fog">{identity.tagline}</p>

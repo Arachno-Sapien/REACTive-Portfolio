@@ -1,3 +1,4 @@
+import { useLazyMount } from '@/hooks/useLazyMount'
 import SpotlightCard from '@/components/react-bits/SpotlightCard/SpotlightCard'
 import GlareHover from '@/components/react-bits/GlareHover/GlareHover'
 import AnimatedContent from '@/components/react-bits/AnimatedContent/AnimatedContent'
@@ -6,11 +7,19 @@ import SplitText from '@/components/react-bits/SplitText/SplitText'
 import { projects } from '@/data/portfolio'
 
 export function Projects() {
+  const { containerRef, mounted } = useLazyMount('350px')
   const [featured, ...rest] = projects
 
   return (
-    <section id="projects" className="section-shell">
-      <p className="section-kicker">Projects</p>
+    <section
+      id="projects"
+      ref={containerRef}
+      className="section-shell"
+      style={{ minHeight: mounted ? undefined : '520px' }}
+    >
+      {!mounted ? null : (
+        <>
+          <p className="section-kicker">Projects</p>
       <SplitText
         text="Selected builds"
         tag="h2"
@@ -65,7 +74,7 @@ export function Projects() {
                 </div>
                 <div className="flex justify-center">
                   <TiltedCard
-                    imageSrc={featured.image || '/assets/project-1.png'}
+                    imageSrc={featured.image || '/assets/project-1.webp'}
                     altText={featured.name}
                     captionText={featured.name}
                     containerHeight="240px"
@@ -119,6 +128,8 @@ export function Projects() {
           </AnimatedContent>
         ))}
       </div>
+        </>
+      )}
     </section>
   )
 }

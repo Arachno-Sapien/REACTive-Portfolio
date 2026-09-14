@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useDeviceCapability } from '@/hooks/useDeviceCapability'
 import Particles from '@/components/react-bits/Particles/Particles'
 import Dock from '@/components/react-bits/Dock/Dock'
 import Magnet from '@/components/react-bits/Magnet/Magnet'
@@ -6,6 +7,7 @@ import SplitText from '@/components/react-bits/SplitText/SplitText'
 import { identity } from '@/data/portfolio'
 
 export function Contact() {
+  const tier = useDeviceCapability()
   const [copied, setCopied] = useState(false)
 
   const handleCopy = () => {
@@ -75,16 +77,18 @@ export function Contact() {
 
   return (
     <section id="contact" className="relative overflow-hidden">
-      <div className="absolute inset-0">
-        <Particles
-          particleCount={85}
-          particleColors={['#3dffa8', '#7ec8ff', '#e8eef2']}
-          speed={0.08}
-          particleBaseSize={72}
-          alphaParticles
-          cameraDistance={22}
-        />
-      </div>
+      {tier === 'high' && (
+        <div className="absolute inset-0">
+          <Particles
+            particleCount={85}
+            particleColors={['#3dffa8', '#7ec8ff', '#e8eef2']}
+            speed={0.08}
+            particleBaseSize={72}
+            alphaParticles
+            cameraDistance={22}
+          />
+        </div>
+      )}
       <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/70 to-ink/40" />
 
       <div className="section-shell relative">

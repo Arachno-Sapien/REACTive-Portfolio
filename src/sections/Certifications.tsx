@@ -1,10 +1,12 @@
 import { useState, useMemo, useEffect } from 'react'
+import { useLazyMount } from '@/hooks/useLazyMount'
 import Stack from '@/components/react-bits/Stack/Stack'
 import FadeContent from '@/components/react-bits/FadeContent/FadeContent'
 import SplitText from '@/components/react-bits/SplitText/SplitText'
 import { certificates, courses, hackathons } from '@/data/portfolio'
 
 export function Certifications() {
+  const { containerRef, mounted } = useLazyMount('350px')
   const [activeIndex, setActiveIndex] = useState(0)
   const [isGalleryOpen, setIsGalleryOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
@@ -19,6 +21,7 @@ export function Certifications() {
           src={cert.image}
           alt={cert.title}
           loading="lazy"
+          decoding="async"
           className="h-full w-full rounded-2xl object-cover shadow-xl border border-line select-none pointer-events-none"
         />
       )),
@@ -72,8 +75,15 @@ export function Certifications() {
   }
 
   return (
-    <section id="certifications" className="section-shell">
-      <p className="section-kicker">Certifications</p>
+    <section
+      id="certifications"
+      ref={containerRef}
+      className="section-shell"
+      style={{ minHeight: mounted ? undefined : '520px' }}
+    >
+      {!mounted ? null : (
+        <>
+          <p className="section-kicker">Certifications</p>
       <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8">
         <div>
           <SplitText
@@ -276,6 +286,7 @@ export function Certifications() {
                             src={cert.image}
                             alt={cert.title}
                             loading="lazy"
+                            decoding="async"
                             className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
                           />
                           <div className="absolute inset-0 bg-ink/40 opacity-0 transition duration-200 group-hover:opacity-100 flex items-center justify-center">
@@ -360,6 +371,7 @@ export function Certifications() {
               <img
                 src={certificates[selectedCertIndex].image}
                 alt={certificates[selectedCertIndex].title}
+                decoding="async"
                 className="max-h-[75vh] w-auto max-w-full object-contain"
               />
 
@@ -387,6 +399,8 @@ export function Certifications() {
             </div>
           </div>
         </div>
+      )}
+        </>
       )}
     </section>
   )

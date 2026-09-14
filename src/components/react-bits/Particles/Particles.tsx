@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { Renderer, Camera, Geometry, Program, Mesh } from 'ogl';
+import { useDeviceCapability } from '@/hooks/useDeviceCapability';
 
 interface ParticlesProps {
   particleCount?: number;
@@ -72,7 +73,6 @@ const vertex = /* glsl */ `
     }
     
     gl_Position = projectionMatrix * mvPos;
-    gl_Position = projectionMatrix * mvPos;
   }
 `;
 
@@ -115,15 +115,29 @@ const Particles: React.FC<ParticlesProps> = ({
   pixelRatio = 1,
   className
 }) => {
+  const tier = useDeviceCapability();
   const containerRef = useRef<HTMLDivElement>(null);
   const mouseRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+  const isVisibleRef = useRef<boolean>(true);
 
   useEffect(() => {
+    // On low-end devices skip the WebGL particles entirely
+    if (tier === 'low') return;
+
     const container = containerRef.current;
     if (!container) return;
 
-    const renderer = new Renderer({ dpr: pixelRatio, depth: false, alpha: true });
-    const gl = renderer.gl;
+    let renderer: Renderer;
+    let gl: Renderer['gl'];
+
+    // Graceful WebGL init — catch driver/context failures without crashing
+    try {
+      renderer = new Renderer({ dpr: pixelRatio, depth: false, alpha: true });
+      gl = renderer.gl;
+    } catch {
+      return;
+    }
+
     container.appendChild(gl.canvas);
     gl.clearColor(0, 0, 0, 0);
 
@@ -136,7 +150,7 @@ const Particles: React.FC<ParticlesProps> = ({
       renderer.setSize(width, height);
       camera.perspective({ aspect: gl.canvas.width / gl.canvas.height });
     };
-    window.addEventListener('resize', resize, false);
+    window.addEventListener('resize', resize, { passive: true });
     resize();
 
     const handleMouseMove = (e: MouseEvent) => {
@@ -177,19 +191,25 @@ const Particles: React.FC<ParticlesProps> = ({
       color: { size: 3, data: colors }
     });
 
-    const program = new Program(gl, {
-      vertex,
-      fragment,
-      uniforms: {
-        uTime: { value: 0 },
-        uSpread: { value: particleSpread },
-        uBaseSize: { value: particleBaseSize * pixelRatio },
-        uSizeRandomness: { value: sizeRandomness },
-        uAlphaParticles: { value: alphaParticles ? 1 : 0 }
-      },
-      transparent: true,
-      depthTest: false
-    });
+    let program: Program;
+    try {
+      program = new Program(gl, {
+        vertex,
+        fragment,
+        uniforms: {
+          uTime: { value: 0 },
+          uSpread: { value: particleSpread },
+          uBaseSize: { value: particleBaseSize * pixelRatio },
+          uSizeRandomness: { value: sizeRandomness },
+          uAlphaParticles: { value: alphaParticles ? 1 : 0 }
+        },
+        transparent: true,
+        depthTest: false
+      });
+    } catch {
+      gl.getExtension('WEBGL_lose_context')?.loseContext();
+      return;
+    }
 
     const particles = new Mesh(gl, { mode: gl.POINTS, geometry, program });
 
@@ -199,6 +219,10 @@ const Particles: React.FC<ParticlesProps> = ({
 
     const update = (t: number) => {
       animationFrameId = requestAnimationFrame(update);
+
+      // Skip rendering when off-screen — zero GPU cost
+      if (!isVisibleRef.current) return;
+
       const delta = t - lastTime;
       lastTime = t;
       elapsed += delta * speed;
@@ -224,18 +248,29 @@ const Particles: React.FC<ParticlesProps> = ({
 
     animationFrameId = requestAnimationFrame(update);
 
+    // Pause RAF when Contact section is not visible
+    const io = new IntersectionObserver(
+      ([entry]) => { isVisibleRef.current = entry.isIntersecting; },
+      { threshold: 0 },
+    );
+    io.observe(container);
+
     return () => {
+      cancelAnimationFrame(animationFrameId);
+      io.disconnect();
       window.removeEventListener('resize', resize);
       if (moveParticlesOnHover) {
         container.removeEventListener('mousemove', handleMouseMove);
       }
-      cancelAnimationFrame(animationFrameId);
       if (container.contains(gl.canvas)) {
         container.removeChild(gl.canvas);
       }
+      // Explicitly release the WebGL context so the browser can reclaim GPU memory
+      gl.getExtension('WEBGL_lose_context')?.loseContext();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
+    tier,
     particleCount,
     particleSpread,
     speed,
@@ -249,7 +284,7 @@ const Particles: React.FC<ParticlesProps> = ({
     pixelRatio
   ]);
 
-  return <div ref={containerRef} className={`relative w-full h-full ${className}`} />;
+  return <div ref={containerRef} className={`relative w-full h-full ${className ?? ''}`} />;
 };
 
 export default Particles;
