@@ -94,7 +94,7 @@ export function Certifications() {
             textAlign="left"
           />
           <p className="mt-2 text-sm text-fog">
-            29 verified credentials across AI, software engineering, IoT, and systems
+            {certificates.length} verified credentials across AI, software engineering, IoT, and systems
           </p>
         </div>
 
@@ -106,7 +106,7 @@ export function Certifications() {
           <svg className="h-4 w-4 text-mint" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" aria-hidden="true">
             <path strokeLinecap="round" strokeLinejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
           </svg>
-          <span>View All Certificates (29)</span>
+          <span>View All Certificates ({certificates.length})</span>
         </button>
       </div>
 
@@ -143,7 +143,7 @@ export function Certifications() {
               onClick={() => setIsGalleryOpen(true)}
               className="font-medium text-mint hover:underline cursor-pointer"
             >
-              Browse all 29 →
+              Browse all {certificates.length} →
             </button>
           </div>
         </div>
@@ -314,7 +314,7 @@ export function Certifications() {
             {/* Modal Footer */}
             <div className="flex items-center justify-between border-t border-line/80 px-5 py-3 text-xs text-fog bg-panel-2/40">
               <span>Press <kbd className="rounded border border-line bg-ink px-1.5 py-0.5 font-mono text-[10px] text-paper">Esc</kbd> to close</span>
-              <span>All 29 credentials verified</span>
+              <span>All {certificates.length} credentials verified</span>
             </div>
           </div>
         </div>

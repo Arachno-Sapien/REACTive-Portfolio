@@ -4,11 +4,11 @@ export const identity = {
   handle: 'arachno.sapien',
   title: 'B.E. student in Information Science Engineering',
   tagline: 'Trying to do Better.',
-  status: 'Building in Bengaluru',
+  status: 'Open to work',
   focus:
-    'Engineering student at DSATM focused on building usable software, smart systems, and project-based solutions.',
+    'Engineering student at DSATM building usable software, AI/ML tools, and smart systems, with software and AI internships at ecoprosus and ShikshaVertex.',
   interests:
-    'Software & web development, IoT applications, renewable-energy tech, debating, and video production/editing.',
+    'AI & machine learning, software & web development, IoT applications, renewable-energy tech, debating, and video production/editing.',
   location: 'Bengaluru, Karnataka, India',
   email: 'syed.junaid0604@gmail.com',
   phone: '+91 7204983797',
@@ -25,7 +25,7 @@ export const navItems = [
   { label: 'Skills', href: '#skills', ariaLabel: 'Skills' },
   { label: 'Certs', href: '#certifications', ariaLabel: 'Certifications' },
   { label: 'Projects', href: '#projects', ariaLabel: 'Projects' },
-  { label: 'Leadership', href: '#leadership', ariaLabel: 'Leadership' },
+  { label: 'Experience', href: '#experience', ariaLabel: 'Experience' },
   { label: 'Contact', href: '#contact', ariaLabel: 'Contact' },
 ]
 
@@ -34,7 +34,6 @@ export const education = [
     school: 'Dayananda Sagar Academy of Technology and Management',
     detail: 'B.E., Information Science Engineering',
     period: 'Oct 2024 – Oct 2028',
-    result: 'CGPA (1st Year): 8.6',
   },
   {
     school: 'Aakash Institute × GR PU College',
@@ -53,32 +52,60 @@ export const education = [
 export const skills = {
   technical: [
     'Python',
-    'C',
     'Java',
+    'C',
     'C#',
     'JavaScript',
+    'TypeScript',
+    'PHP',
+    'SQL',
+    'React',
+    'Next.js',
+    'Django',
+    'FastAPI',
+    'Flask',
+    'Express',
+    'Three.js',
+    'Tailwind CSS',
     'HTML',
     'CSS',
-    'PHP',
-    'DBMS',
-    'SQL',
-    'Django',
-    'Next.js',
     'REST API',
-    'Git',
     'OpenCV',
+    'YOLO',
+    'PyTorch',
+    'scikit-learn',
+    'Pandas',
+    'MediaPipe',
+    'Gemini & OpenAI APIs',
+    'PostgreSQL',
+    'MySQL',
     'SQLite',
+    'NoSQL',
+    'Docker',
+    'Git',
+    'Linux',
+    'Jupyter',
+    'Pytest',
+    'MATLAB',
+    'Arduino',
   ],
   tools: [
     'Project Management',
     'Time Efficiency',
     'Organization',
     'Analytical Skills',
+    'Problem Solving',
+    'Critical Thinking',
+    'Software Design',
     'Microsoft Office',
+    'VS Code',
+    'Video Editing',
     'Prompt Engineering',
   ],
   communication: [
+    'Leadership',
     'Public Speaking',
+    'Debate',
     'Teamwork',
     'Team Building',
     'Team Management',
@@ -89,8 +116,11 @@ export const skills = {
 }
 
 export const courses = [
-  'Artificial Intelligence & Machine Learning - IISc Bangalore',
-  'Mastering Generative AI - IISc Bangalore',
+  'Professional Program in Artificial Intelligence - ShikshaVertex',
+  'Full Stack Web Development with AI - Internshala Trainings',
+  'Full Stack Web Development with AI (NSDC) - Scholiverse Educare',
+  'Artificial Intelligence & Machine Learning - Vital Skills × IISc Bangalore',
+  'Mastering Generative AI - Vital Skills × IISc Bangalore',
   'Internet of Things - Infosys Springboard',
   'Introduction to Programming Using Python - Infosys Springboard',
   'Programming in Python - Infosys Springboard',
@@ -108,10 +138,13 @@ export const courses = [
 ]
 
 export const hackathons = [
+  'Smart India Hackathon 2026 - built for two problem statements',
+  'Build 4 Karnataka AI Buildathon - Comedkares (Sep 2026)',
+  'Formula Bharat 2026 - Team Vulcan Racing, Kari Motor Speedway',
+  'AI & ML / Generative AI Hackathons - IISc Bangalore',
   'Algo-Rave Hackathon - Dayananda Sagar Academy',
   'National Level Tech Fest: ALGO-RYTHM-2024 - Dayananda Sagar Academy',
-  'AI & ML / Generative AI (Course & Hackathon) - IISc Bangalore',
-  'Formula Bharat 2026',
+  'Antaragni 2024 Debate (ISE team) - Dayananda Sagar Academy',
 ]
 
 export const certificates = [
@@ -189,7 +222,7 @@ export const certificates = [
     image: '/assets/certificates/images/full-stack-development-with-ai-nsdc.webp',
   },
   {
-    title: 'Shiksha Vertex Training',
+    title: 'Professional Program in AI (ShikshaVertex)',
     image: '/assets/certificates/images/shiksha-vertex-training.webp',
   },
   {
@@ -200,17 +233,93 @@ export const certificates = [
     title: 'Personal Effectiveness',
     image: '/assets/certificates/images/personal-effectiveness.webp',
   },
-  { title: 'Vulcan Racing', image: '/assets/certificates/images/vulcan-racing.webp' },
+  {
+    title: 'Formula Bharat 2026 (Vulcan Racing)',
+    image: '/assets/certificates/images/vulcan-racing.webp',
+  },
+  {
+    title: 'Build 4 Karnataka AI Buildathon',
+    image: '/assets/certificates/images/build-4-karnataka-buildathon.webp',
+  },
+  {
+    title: 'Algo-Rave Hackathon',
+    image: '/assets/certificates/images/algo-rave-hackathon.webp',
+  },
+  {
+    title: 'ALGO-RYTHM-2024 Hackathon',
+    image: '/assets/certificates/images/algo-rythm-2024-hackathon.webp',
+  },
+  {
+    title: 'Antaragni 2024 Debate',
+    image: '/assets/certificates/images/antaragni-2024-debate.webp',
+  },
 ]
 
 export const projects = [
+  {
+    name: 'FundVault',
+    description:
+      'Multi-tenant fund and ledger platform where each organisation connects its own PostgreSQL database, with role-based access, audit logs, and receipt-to-ledger extraction using Gemini or OpenAI models.',
+    tags: ['Django', 'Next.js', 'PostgreSQL'],
+    url: 'https://github.com/Arachno-Sapien/FundVault',
+    image: '/assets/project-fundvault.webp',
+  },
+  {
+    name: 'DepthWizard',
+    description:
+      'Turns a single optical satellite image into a metric 3D terrain model for ISRO PS-26175 (Smart India Hackathon 2026). Depth Anything V2 estimates elevation, calibrated against reference DEMs, and a Three.js viewer adds flood and landslide analysis.',
+    tags: ['PyTorch', 'FastAPI', 'Three.js', 'SIH 2026'],
+    url: 'https://depth-wizard-weld.vercel.app',
+    image: '/assets/project-depthwizard.webp',
+  },
+  {
+    name: 'Waste Vision System',
+    description:
+      'Built at ecoprosus: detects bins in images, video, and RTSP streams with YOLOE, segments the waste with YOLO11, and reports how full each bin is in a Streamlit dashboard.',
+    tags: ['YOLO', 'OpenCV', 'Streamlit'],
+    url: 'https://github.com/Arachno-Sapien/Waste-bin-Detection-Capacity-Measurement',
+  },
+  {
+    name: 'CyberTrace AI',
+    description:
+      'SIH 2026 team project that traces multi-hop UPI mule networks and ranks likely ATM cash-out locations with a scikit-learn model, shown on Leaflet maps and React Flow graphs.',
+    tags: ['React', 'TypeScript', 'scikit-learn'],
+    url: 'https://github.com/sagr12004/cybertrace',
+  },
+  {
+    name: 'INCOIS Ocean3D',
+    description:
+      'Three.js scene of the northern Indian Ocean for INCOIS, showing temperature, salinity, and current fields alongside real Argo float, glider, CTD, and mooring profiles.',
+    tags: ['Three.js', 'JavaScript', 'Ocean Data'],
+    url: 'https://samudhra-drishti.vercel.app',
+  },
+  {
+    name: 'Bloc-Chat',
+    description:
+      'Serverless peer-to-peer LAN messenger for text, voice, and video, encrypted with RSA-2048 and AES-256-GCM, with a SHA-256 hash chain that makes tampering detectable.',
+    tags: ['Python', 'PyQt6', 'Cryptography'],
+    url: 'https://github.com/Arachno-Sapien/Bloc-Chat',
+  },
+  {
+    name: 'RetailOps AI',
+    description:
+      'End-to-end retail operations platform that audits raw POS and staffing data, computes weekly KPIs in Python, and generates AI-verified digests with Gemini.',
+    tags: ['Python', 'Gemini API', 'Data Pipelines'],
+    url: 'https://github.com/Arachno-Sapien/RetailOps-AI',
+  },
+  {
+    name: 'AdaptiControl',
+    description:
+      'Accessibility-focused hackathon project using gestures, voice commands, translation, and AI-powered interaction.',
+    tags: ['Python', 'OpenCV', 'MediaPipe'],
+    url: 'https://github.com/Arachno-Sapien/AdaptiControl',
+  },
   {
     name: 'Elysium',
     description:
       'Algae-based air purification system using Chlorella vulgaris and design-thinking workflows for urban CO₂ reduction.',
     tags: ['Design Thinking', 'Prototyping', 'Sustainability'],
     url: 'https://github.com/Arachno-Sapien/ELYSIUM',
-    image: '/assets/project-1.webp',
   },
   {
     name: 'Real-time Video Transmission',
@@ -226,40 +335,20 @@ export const projects = [
     tags: ['PHP', 'JavaScript', 'CSS'],
     url: 'https://github.com/Arachno-Sapien/Data-Structure-Simulation-Visualizer',
   },
-  {
-    name: 'Fund Management System',
-    description:
-      'Full-stack fund management app with Django REST Framework and Next.js, featuring AI-powered receipt extraction via NVIDIA Nemotron and Gemini.',
-    tags: ['Django', 'Next.js', 'REST API'],
-    url: 'https://github.com/Arachno-Sapien/Fund-Management-System',
-  },
-  {
-    name: 'AdaptiControl',
-    description:
-      'Accessibility-focused hackathon project using gestures, voice commands, translation, and AI-powered interaction.',
-    tags: ['Python', 'OpenCV', 'MediaPipe'],
-    url: 'https://github.com/Arachno-Sapien/AdaptiControl',
-  },
-  {
-    name: 'RetailOps AI',
-    description:
-      'End-to-end retail operations platform that audits raw POS and staffing data, computes weekly KPIs in Python, and generates AI-verified digests with Gemini.',
-    tags: ['Python', 'Gemini API', 'Data Pipelines'],
-    url: 'https://github.com/Arachno-Sapien/RetailOps-AI',
-  },
-  {
-    name: 'Bloc-Chat',
-    description:
-      'Privacy-first LAN messenger that works fully offline, combining encryption with a verifiable message history.',
-    tags: ['Python', 'Encryption', 'Networking'],
-    url: 'https://github.com/Arachno-Sapien/Bloc-Chat',
-  },
 ]
 
-export const leadership = [
+export const experience = [
+  {
+    title: 'ecoprosus',
+    body: 'Designed and built computer vision software in Python and OpenCV, applying ML models to image and video input. The main build was Waste Vision System, which measures how full waste bins are from camera feeds.',
+  },
+  {
+    title: 'ShikshaVertex',
+    body: 'Completed the Professional Program in Artificial Intelligence (10 Jul – 10 Sep 2026), working through data analysis and model building with Pandas in Jupyter.',
+  },
   {
     title: 'Vulcan Racing',
-    body: 'Core member and head of business operations for upcoming Formula Bharat 2027 — recruit workshops and club website.',
+    body: 'Part of the first DSATM team to compete at Formula Bharat (Kari Motor Speedway, Jan 2026). Now handling sponsorship, outreach, and planning for the 2027 season, and building the team website in Next.js, React, and Tailwind CSS.',
   },
   {
     title: 'Hackathon Collaboration',

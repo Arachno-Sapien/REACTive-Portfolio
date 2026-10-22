@@ -32,7 +32,7 @@ export function Hero() {
             textAlign="left"
           />
           <TextType
-            text={[identity.title, identity.tagline, 'Web · Python · CV · IoT · Sustainable tech']}
+            text={[identity.title, identity.tagline, 'AI / ML · Web · Python · CV · IoT · Sustainable tech']}
             typingSpeed={42}
             deletingSpeed={24}
             pauseDuration={1800}

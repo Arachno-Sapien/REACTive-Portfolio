@@ -9,6 +9,7 @@ import { projects } from '@/data/portfolio'
 export function Projects() {
   const { containerRef, mounted } = useLazyMount('350px')
   const [featured, ...rest] = projects
+  const featuredLinkLabel = featured?.url.includes('github.com') ? 'GitHub' : 'Live demo'
 
   return (
     <section
@@ -53,7 +54,7 @@ export function Projects() {
                       Featured
                     </p>
                     <span className="flex items-center gap-1 text-xs text-mint opacity-80 group-hover:opacity-100">
-                      GitHub
+                      {featuredLinkLabel}
                       <svg className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M7 17L17 7M17 7H7M17 7V17" />
                       </svg>
@@ -87,7 +88,7 @@ export function Projects() {
                     displayOverlayContent
                     overlayContent={
                       <p className="rounded-full bg-ink/70 px-3 py-1 text-xs text-mint">
-                        Open on GitHub
+                        {featuredLinkLabel === 'GitHub' ? 'Open on GitHub' : 'Open live demo'}
                       </p>
                     }
                   />

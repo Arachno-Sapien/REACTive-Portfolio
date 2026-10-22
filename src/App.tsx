@@ -9,7 +9,7 @@ import { Education } from '@/sections/Education'
 import { Skills } from '@/sections/Skills'
 import { Certifications } from '@/sections/Certifications'
 import { Projects } from '@/sections/Projects'
-import { Leadership } from '@/sections/Leadership'
+import { Experience } from '@/sections/Experience'
 import { Contact } from '@/sections/Contact'
 
 function useActiveSection(ids: string[]) {
@@ -49,7 +49,7 @@ export default function App() {
     'skills',
     'certifications',
     'projects',
-    'leadership',
+    'experience',
     'contact',
   ])
 
@@ -152,7 +152,7 @@ export default function App() {
           <Skills />
           <Certifications />
           <Projects />
-          <Leadership />
+          <Experience />
           <Contact />
         </main>
 

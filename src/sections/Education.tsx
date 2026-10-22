@@ -40,12 +40,14 @@ export function Education() {
                   <h3 className="font-display text-xl font-semibold leading-snug">{item.school}</h3>
                   <p className="mt-2 text-fog">{item.detail}</p>
                 </div>
-                <div className="mt-6 flex items-center">
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-sky/30 bg-sky/10 px-3 py-1 text-xs font-semibold text-sky">
-                    <span className="h-1.5 w-1.5 rounded-full bg-sky" />
-                    {item.result}
-                  </span>
-                </div>
+                {item.result && (
+                  <div className="mt-6 flex items-center">
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-sky/30 bg-sky/10 px-3 py-1 text-xs font-semibold text-sky">
+                      <span className="h-1.5 w-1.5 rounded-full bg-sky" />
+                      {item.result}
+                    </span>
+                  </div>
+                )}
               </Card>
             ))}
           </CardSwap>
